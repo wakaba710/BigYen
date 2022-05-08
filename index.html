@@ -1,0 +1,229 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>  
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>            
+    
+    <title>大金瞬読</title>
+</head>
+<body>
+    <nav class="yellow darken-3" role="navigation">
+        <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo">大金瞬読</a>
+
+        </div>
+      </nav>
+      <div class="section no-pad-bot" id="index-banner">
+        <div class="container">
+            <div class="row">
+                <div id="time" class="col s6">残り時間 60秒</div>
+                <div  id="score" class="col s6">0点</div>
+                      
+            </div>
+            <div id="problemWrapper" class="scale-transition">
+                <div class="card-panel yellow accent-4 center"><h4 id="problem">8,000(千円)</h4></div>                      
+                <ul class="collection with-header">
+                    <li id="answer0" class="collection-item" onclick="buttonClick()">Alvin</li>
+                    <li id="answer1" class="collection-item" onclick="buttonClick()">Alvin</li>
+                    <li id="answer2" class="collection-item" onclick="buttonClick()">Alvin</li>
+                    <li id="answer3" class="collection-item" onclick="buttonClick()">Alvin</li>
+                </ul>
+            </div>
+        </div>
+      </div>
+
+      <div id="modal1" class="modal">
+        <div class="modal-content">
+          <h4>結果発表</h4>
+          <h4 id="result">1,000,000点</h4>
+          <div class="row center">
+            <a id="twitter_button" class="btn-large pulse" onclick="tweetResult()" >結果をツイート</a>
+          </div>
+          
+        </div>
+        <div class="modal-footer">
+          <a href="#!" class="waves-effect waves-green btn-flat" onclick="window.location.reload();">もう一回やるで</a>
+        </div>
+      </div>
+        
+      <footer class="page-footer grey">
+        <div class="container">
+          <div class="row">
+            <div class="col l6 s12">
+              <h5 class="white-text">読み方のコツ</h5>
+              <p class="grey-text text-lighten-4">3桁区切りは英語由来。次の関係を覚えよう!!</p>
+              <table>
+                <thead>
+                  <tr>
+                      <th>英語</th>
+                      <th>数字</th>
+                      <th>日本語</th>
+                  </tr>
+                </thead>
+        
+                <tbody>
+                  <tr>
+                    <td>Thousand</td>
+                    <td>1,000</td>
+                    <td>千</td>
+                  </tr>
+                  <tr>
+                    <td>Million</td>
+                    <td>1,000,000</td>
+                    <td>100万</td>
+                  </tr>
+                  <tr>
+                    <td>Billion</td>
+                    <td>1,000,000,000</td>
+                    <td>10億</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="footer-copyright">
+          <div class="container">
+          Made by <a class=" text-lighten-3" href="#">Wakaba</a>
+          </div>
+        </div>
+      </footer>
+    
+</body>
+
+<script>
+    var score=0;
+    var qNum =0;
+    var remainTime=15;
+    var startTime;
+    var finFlag=true;
+    startTime = Date.now() +15 *1000;
+
+    setInterval(reloadTimer, 1000);
+
+    function reloadTimer(){
+        var remainSecond =Math.round((startTime -Date.now())/1000);
+        if(remainSecond<0){
+            remainTime=0;
+            //document.getElementById('problemWrapper').style.display="none";
+            if(finFlag){
+                document.getElementById('problemWrapper').classList.add('scale-out');
+                document.getElementById('result').textContent = score.toLocaleString() +"点";
+                var elem=document.getElementById('modal1');
+                var instance = M.Modal.getInstance(elem);
+                instance.open();
+            }
+            finFlag=false;
+        }else{
+            remainTime=remainSecond;
+        }
+        document.getElementById('time').textContent = "残り時間 "+ remainTime +"秒";
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+    var elems = document.querySelectorAll('.modal');
+    var instances = M.Modal.init(elems);
+    });
+
+    const addNumUnit = n => {
+        if(isNaN(n) || +n === 0) return n;
+        const s = String(n).trim().replace(/^\+/, '');
+        if(!/^-?\d+\.?/.test(s)) return n;
+        const sp = d => {
+        const t = ['', '万', '億', '兆', '京', '垓'];
+        const ret = [];
+        for(let i = 0, r = d.split(''); r.length > 0; i++) {
+            const n = r.splice(t[i + 1] !== undefined ? -4 : 0).join('').replace(/^0+/, '');
+            if(n !== '') ret.unshift(n + t[i]);
+        }
+        return ret.join('');
+        }
+        return s.replace(/^([-+]?)(\d+)/, (_, m1, m2) => m1 + sp(m2));
+    }
+
+    function rawNum(){
+        var headNum = 1+Math.floor(Math.random() * 9);
+        var digit = 6+Math.floor(Math.random() * 5);
+        return headNum * Math.pow(10, digit);
+    }
+
+
+    function questionString(num){
+        var qust ="";
+        qust+= num.toString()+",";
+        qust+= addNumUnit(num*10)+",";
+        qust+= addNumUnit(num)+",";
+        qust+= addNumUnit(num/10)+",";
+        qust+= addNumUnit(num/100)+",";
+        qust+= 1;
+        return qust;
+    }
+
+    function questioning(){
+        qNum = rawNum();
+        if((qNum>=10*1000)&&(Math.random()>0.5)){
+            document.getElementById('problem').textContent =Number(qNum/1000).toLocaleString()+"(千円)";
+        }
+        else{
+            document.getElementById('problem').textContent =Number(qNum).toLocaleString()+"円";
+        }
+        if((qNum>=10*1000*1000)&&(Math.random()>0.5)){
+            document.getElementById('problem').textContent =Number(qNum/1000/1000).toLocaleString()+"(百万円)";
+        }
+        else{
+            document.getElementById('problem').textContent =Number(qNum).toLocaleString()+"円";
+        }
+
+        qFalse=[addNumUnit(qNum*100),addNumUnit(qNum*10), addNumUnit(qNum/10),addNumUnit(qNum/100)];
+        qFalse=arrayShuffle(qFalse);
+        qFalseTrue=[addNumUnit(qNum)];
+        qFalseTrue.push(qFalse[0]);
+        qFalseTrue.push(qFalse[1]);
+        qFalseTrue.push(qFalse[2]);
+        qFalseTrue=arrayShuffle(qFalseTrue);
+
+        document.getElementById('answer0').textContent = addNumUnit(qFalseTrue[0]);
+        document.getElementById('answer1').textContent = addNumUnit(qFalseTrue[1]);
+        document.getElementById('answer2').textContent = addNumUnit(qFalseTrue[2]);
+        document.getElementById('answer3').textContent = addNumUnit(qFalseTrue[3]);
+    }
+
+    function arrayShuffle(array) {
+        for(var i = (array.length - 1); 0 < i; i--){
+            var r = Math.floor(Math.random() * (i + 1));
+            var tmp = array[i];
+            array[i] = array[r];
+            array[r] = tmp;
+        }
+        return array;
+    }
+
+    function AddScore(){
+        score += 100000000;
+        document.getElementById('score').textContent = score.toLocaleString()+"点";
+    }
+
+    function buttonClick(e){
+        var e = e || window.event;
+        var elem = e.target || e.srcElement;
+        var elemId = elem.id;
+        if(addNumUnit(qNum) == document.getElementById(elemId).textContent){
+            AddScore();
+        }
+        if(remainTime>0){questioning();}
+
+    }
+
+    function tweetResult(){
+        var tw_contents = ("あなたの点数は【" + score.toLocaleString() + "】点です。");
+        var url = "[my_home_url]";
+        window.open().location.href = ("https://twitter.com/share?url=" + url + "&text=" + tw_contents + "&count=none&lang=ja");
+    }
+
+    questioning();
+
+</script>
+</html>
