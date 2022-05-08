@@ -8,11 +8,11 @@
     <!-- Compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>            
     
-    <title>大金瞬読</title>
+    <title>桁読みの鬼</title>
 </head>
 <body>
     <nav class="yellow darken-3" role="navigation">
-        <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo">大金瞬読</a>
+        <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo">桁読みの鬼</a>
 
         </div>
       </nav>
@@ -29,10 +29,18 @@
             <div id="problemWrapper" class="scale-transition">
                 <div class="card-panel yellow accent-4 center"><h4 id="problem">8,000(千円)</h4></div>                      
                 <ul class="collection with-header">
-                    <li id="answer0" class="collection-item" onclick="buttonClick()">Alvin</li>
-                    <li id="answer1" class="collection-item" onclick="buttonClick()">Alvin</li>
-                    <li id="answer2" class="collection-item" onclick="buttonClick()">Alvin</li>
-                    <li id="answer3" class="collection-item" onclick="buttonClick()">Alvin</li>
+                    <li class="collection-item" onclick="buttonClick()">
+                        <h4 id="answer0">Alvin</h5>
+                    </li>
+                    <li class="collection-item" onclick="buttonClick()">
+                        <h4 id="answer1">Alvin</h5>
+                    </li>
+                    <li class="collection-item" onclick="buttonClick()">
+                        <h4 id="answer2">Alvin</h5>
+                    </li>
+                    <li class="collection-item" onclick="buttonClick()">
+                        <h4 id="answer3">Alvin</h5>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -43,7 +51,7 @@
           <h4>結果発表</h4>
           <h4 id="result">1,000,000点</h4>
           <div class="row center">
-            <a id="twitter_button" class="btn-large pulse" onclick="tweetResult()" >結果をツイート</a>
+            <a id="twitter_button" class="btn-large pulse yellow darken-3" onclick="tweetResult()" >結果をツイート</a>
           </div>
           
         </div>
@@ -51,50 +59,55 @@
           <a href="#!" class="waves-effect waves-green btn-flat" onclick="window.location.reload();">もう一回やるで</a>
         </div>
       </div>
-        
-      <footer class="page-footer grey">
-        <div class="container">
-          <div class="row">
-            <div class="col l6 s12">
-              <h5 class="white-text">読み方のコツ</h5>
-              <p class="grey-text text-lighten-4">3桁区切りは英語由来。次の関係を覚えよう!!</p>
-              <table>
-                <thead>
-                  <tr>
-                      <th>英語</th>
-                      <th>数字</th>
-                      <th>日本語</th>
-                  </tr>
-                </thead>
-        
-                <tbody>
-                  <tr>
-                    <td>Thousand</td>
-                    <td>1,000</td>
-                    <td>千</td>
-                  </tr>
-                  <tr>
-                    <td>Million</td>
-                    <td>1,000,000</td>
-                    <td>100万</td>
-                  </tr>
-                  <tr>
-                    <td>Billion</td>
-                    <td>1,000,000,000</td>
-                    <td>10億</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+
+      <div id="modal2" class="modal">
+        <div class="modal-content">
+          <h6>80,000,000円みたいに、</h6>
+          <h6>カンマで区切られたでかい数字を</h6>
+          <h6>素早く読むゲームだよ。</h6>
+          <h6>50,000(千円)とかも出てくるよ。</h6>
+
+          <div class="row center">
+            <a id="twitter_button" class="btn-large pulse modal-close" onclick="startTimer()" >スタート</a>
           </div>
+          
+          <h5>読み方のコツ</h5>
+          <p>三桁区切りは欧米由来。</p>
+          <p>英語の単位を覚えると、</p>
+          <p>すぐ変換できるようになる！</p>
+          <p>例) 90,000,000 = 90x100万 = 9000万</p>
+          
+          <table>
+            <thead>
+              <tr>
+                  <th>英語</th>
+                  <th>数字</th>
+                  <th>日本語</th>
+              </tr>
+            </thead>      
+            <tbody>
+              <tr>
+                <td>Thousand</td>
+                <td>1,000</td>
+                <td>千</td>
+              </tr>
+              <tr>
+                <td>Million</td>
+                <td>1,000,000</td>
+                <td>100万</td>
+              </tr>
+              <tr>
+                <td>Billion</td>
+                <td>1,000,000,000</td>
+                <td>10億</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <div class="footer-copyright">
-          <div class="container">
-          Made by Wakaba
-          </div>
+        <div class="modal-footer">
+
         </div>
-      </footer>
-    
+      </div>            
 </body>
 
 <script>
@@ -103,9 +116,11 @@
     var remainTime=15;
     var startTime;
     var finFlag=true;
-    startTime = Date.now() +60 *1000;
 
-    setInterval(reloadTimer, 1000);
+    function startTimer(){
+        startTime = Date.now() +60 *1000;
+        setInterval(reloadTimer, 1000);
+    }
 
     function reloadTimer(){
         var remainSecond =Math.round((startTime -Date.now())/1000);
@@ -149,7 +164,7 @@
 
     function rawNum(){
         var headNum = 1+Math.floor(Math.random() * 9);
-        var digit = 6+Math.floor(Math.random() * 5);
+        var digit = 6+Math.floor(Math.random() * 6);
         return headNum * Math.pow(10, digit);
     }
 
@@ -217,7 +232,6 @@
             AddScore();
         }
         if(remainTime>0){questioning();}
-
     }
 
     function tweetResult(){
@@ -226,7 +240,24 @@
         window.open().location.href = ("https://twitter.com/share?url=" + url + "&text=" + tw_contents + "&count=none&lang=ja");
     }
 
+    function showStartWindow(){
+        // var elem=document.getElementById('modal2');
+        // var instance = M.Modal.getInstance(elem);
+        // instance.open();
+        // const elem = document.getElementById('modal2');
+        // const instance = M.Modal.init(elem);
+        // instance.open();
+
+        document.addEventListener('DOMContentLoaded', function () {
+        var Modalelem = document.getElementById('modal2');
+        var instanceModal = M.Modal.init(Modalelem);
+        instanceModal.open();
+        });
+    }
+
+
     questioning();
+    showStartWindow();
 
 </script>
 </html>
